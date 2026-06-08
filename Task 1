@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumina — Online Learning Platform · Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0d0d0d;
+    --cream: #f9f5ef;
+    --warm: #f2ede3;
+    --gold: #c9a84c;
+    --gold-light: #f0e0b0;
+    --gold-dark: #8a6820;
+    --sage: #4a6741;
+    --sage-light: #e8f0e7;
+    --rust: #b84a2e;
+    --rust-light: #fbeae6;
+    --muted: #6b6560;
+    --border: #e0d8cc;
+    --card: #ffffff;
+    --shadow: 0 2px 16px rgba(13,13,13,0.08);
+    --shadow-lg: 0 8px 40px rgba(13,13,13,0.13);
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #e8e2d9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 24px 16px 48px;
+    color: var(--ink);
+  }
+
+  /* ── PROTOTYPE CHROME ── */
+  .proto-header {
+    width: 100%;
+    max-width: 960px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .proto-title { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--ink); }
+  .proto-title span { color: var(--gold-dark); }
+  .proto-nav { display: flex; gap: 6px; flex-wrap: wrap; }
+  .proto-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    background: var(--cream);
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+  .proto-btn:hover { border-color: var(--gold); color: var(--gold-dark); }
+  .proto-btn.active { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+
+  /* ── DEVICE FRAME ── */
+  .device-frame {
+    width: 100%;
+    max-width: 960px;
+    background: var(--card);
+    border-radius: 20px;
+    box-shadow: var(--shadow-lg), 0 0 0 1px rgba(0,0,0,0.06);
+    overflow: hidden;
+    position: relative;
+    min-height: 680px;
+  }
+
+  /* ── BROWSER BAR ── */
+  .browser-bar {
+    height: 44px;
+    background: #f5f5f5;
+    border-bottom: 1px solid #e8e8e8;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 8px;
+  }
+  .dot { width: 11px; height: 11px; border-radius: 50%; }
+  .dot.r { background: #ff5f57; }
+  .dot.y { background: #febc2e; }
+  .dot.g { background: #28c840; }
+  .url-bar {
+    flex: 1; height: 26px; background: #e8e8e8;
+    border-radius: 6px; display: flex; align-items: center;
+    padding: 0 10px; font-size: 12px; color: #888; margin: 0 12px;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* ── SCREENS ── */
+  .screen { display: none; animation: fadeIn 0.25s ease; }
+  .screen.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  /* ═══════════════════════════
+     SCREEN 1 — HOME / LANDING
+  ═══════════════════════════ */
+  .home-nav {
+    height: 64px;
+    background: var(--cream);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 48px;
+  }
+  .logo { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--ink); letter-spacing: -0.5px; }
+  .logo em { font-style: normal; color: var(--gold-dark); }
+  .nav-links { display: flex; gap: 28px; align-items: center; }
+  .nav-links a {
+    font-size: 14px; font-weight: 500; color: var(--muted);
+    text-decoration: none; cursor: pointer; transition: color 0.15s;
+  }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-cta {
+    background: var(--ink); color: var(--cream);
+    padding: 9px 22px; border-radius: 8px;
+    font-size: 13px; font-weight: 600;
+    cursor: pointer; border: none;
+    transition: background 0.15s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .nav-cta:hover { background: var(--gold-dark); }
+
+  .hero {
+    background: var(--cream);
+    padding: 72px 48px 56px;
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 48px;
+    align-items: center;
+  }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--gold-light); color: var(--gold-dark);
+    font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; padding: 5px 12px; border-radius: 20px;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 52px; line-height: 1.1; font-weight: 700;
+    color: var(--ink); margin-bottom: 18px;
+  }
+  .hero h1 em { font-style: italic; color: var(--gold-dark); }
+  .hero-sub {
+    font-size: 17px; color: var(--muted); line-height: 1.6;
+    margin-bottom: 32px; font-weight: 300;
+  }
+  .hero-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--ink); color: var(--cream);
+    padding: 13px 28px; border-radius: 10px;
+    font-size: 15px; font-weight: 600;
+    cursor: pointer; border: none;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.18s;
+  }
+  .btn-primary:hover { background: var(--gold-dark); transform: translateY(-1px); }
+  .btn-ghost {
+    background: transparent; color: var(--muted);
+    padding: 13px 28px; border-radius: 10px;
+    font-size: 15px; font-weight: 500;
+    cursor: pointer; border: 2px solid var(--border);
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.18s;
+  }
+  .btn-ghost:hover { border-color: var(--ink); color: var(--ink); }
+  .hero-stats { display: flex; gap: 28px; margin-top: 28px; }
+  .stat { }
+  .stat-num { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: var(--ink); }
+  .stat-label { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  .hero-visual {
+    background: var(--warm);
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    height: 360px;
+    position: relative;
+  }
+  .hero-card {
+    position: absolute; background: white;
+    border-radius: 12px; padding: 16px 18px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+  }
+  .hc1 { top: 24px; left: 24px; right: 24px; }
+  .hc2 { bottom: 80px; left: 24px; width: 180px; }
+  .hc3 { bottom: 24px; right: 24px; width: 160px; }
+  .hc-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); margin-bottom: 6px; }
+  .hc-title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .hc-sub { font-size: 12px; color: var(--muted); }
+  .progress-bar { height: 4px; background: var(--border); border-radius: 4px; margin-top: 10px; }
+  .progress-fill { height: 100%; border-radius: 4px; background: var(--gold); }
+  .avatar-row { display: flex; gap: -6px; margin-top: 8px; }
+  .av {
+    width: 26px; height: 26px; border-radius: 50%;
+    border: 2px solid white; background: var(--sage-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 600; color: var(--sage);
+    margin-left: -6px;
+  }
+  .av:first-child { margin-left: 0; }
+  .badge-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--sage); display: inline-block; margin-right: 5px; }
+
+  .section {
+    padding: 56px 48px;
+    background: var(--card);
+    border-top: 1px solid var(--border);
+  }
+  .section-tag {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--gold-dark);
+    margin-bottom: 10px;
+  }
+  .section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 34px; font-weight: 700; color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .section-sub { font-size: 15px; color: var(--muted); margin-bottom: 36px; }
+
+  .course-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .course-card {
+    border: 1px solid var(--border); border-radius: var(--radius);
+    overflow: hidden; background: var(--card);
+    transition: box-shadow 0.2s, transform 0.2s;
+    cursor: pointer;
+  }
+  .course-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); }
+  .course-thumb {
+    height: 130px; display: flex; align-items: center; justify-content: center;
+    font-size: 48px; position: relative;
+  }
+  .course-body { padding: 16px 18px; }
+  .course-cat {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.07em; margin-bottom: 6px;
+  }
+  .course-title { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 6px; line-height: 1.3; }
+  .course-meta { display: flex; align-items: center; justify-content: space-between; }
+  .course-inst { font-size: 12px; color: var(--muted); }
+  .course-price { font-size: 15px; font-weight: 700; color: var(--ink); }
+  .stars { color: var(--gold); font-size: 11px; margin-bottom: 4px; }
+
+  .features-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .feature-card {
+    padding: 24px 20px;
+    background: var(--warm);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+  }
+  .feature-icon { font-size: 28px; margin-bottom: 12px; }
+  .feature-title { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+  .feature-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  /* ═══════════════════════════
+     SCREEN 2 — COURSE CATALOG
+  ═══════════════════════════ */
+  .catalog-layout { display: grid; grid-template-columns: 240px 1fr; min-height: calc(100% - 108px); }
+  .sidebar {
+    background: var(--warm);
+    border-right: 1px solid var(--border);
+    padding: 28px 20px;
+  }
+  .sidebar-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 12px; }
+  .filter-group { margin-bottom: 24px; }
+  .filter-option {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; color: var(--ink); padding: 5px 0;
+    cursor: pointer;
+  }
+  .filter-option input[type=checkbox] { accent-color: var(--gold-dark); width: 14px; height: 14px; }
+  .filter-count { font-size: 11px; color: var(--muted); margin-left: auto; }
+  .price-range { height: 3px; background: var(--border); border-radius: 3px; margin: 10px 0; position: relative; }
+  .price-fill { position: absolute; left: 0; width: 65%; height: 100%; background: var(--gold); border-radius: 3px; }
+
+  .catalog-main { padding: 28px 32px; background: var(--cream); }
+  .catalog-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+  .catalog-top h2 { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: var(--ink); }
+  .sort-select {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; padding: 7px 12px;
+    border: 1px solid var(--border); border-radius: 8px;
+    background: var(--card); color: var(--ink); cursor: pointer;
+  }
+  .search-field {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 9px 14px; margin-bottom: 20px;
+  }
+  .search-field input {
+    border: none; outline: none; background: transparent;
+    font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--ink); flex: 1;
+  }
+  .search-field input::placeholder { color: var(--muted); }
+  .catalog-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+
+  /* ═══════════════════════════
+     SCREEN 3 — COURSE DETAIL
+  ═══════════════════════════ */
+  .detail-hero {
+    background: var(--ink);
+    padding: 40px 48px;
+    color: var(--cream);
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 40px;
+  }
+  .detail-breadcrumb { font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 14px; }
+  .detail-breadcrumb span { color: var(--gold); cursor: pointer; }
+  .detail-tag {
+    display: inline-block; background: var(--gold);
+    color: var(--ink); font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    padding: 4px 10px; border-radius: 20px; margin-bottom: 14px;
+  }
+  .detail-hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px; font-weight: 700; line-height: 1.2;
+    margin-bottom: 12px;
+  }
+  .detail-hero p { font-size: 15px; color: rgba(255,255,255,0.7); line-height: 1.6; margin-bottom: 18px; }
+  .detail-meta { display: flex; gap: 20px; font-size: 13px; color: rgba(255,255,255,0.6); flex-wrap: wrap; }
+  .detail-meta strong { color: white; }
+
+  .enroll-card {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 24px;
+    color: var(--ink);
+    height: fit-content;
+  }
+  .enroll-price { font-family: 'Playfair Display', serif; font-size: 34px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+  .enroll-orig { font-size: 14px; color: var(--muted); text-decoration: line-through; margin-bottom: 16px; }
+  .enroll-includes { font-size: 12px; color: var(--muted); margin-top: 16px; }
+  .include-item { display: flex; gap: 8px; font-size: 13px; padding: 5px 0; color: var(--ink); align-items: center; }
+  .include-icon { color: var(--sage); font-weight: 700; }
+
+  .detail-body { padding: 40px 48px; display: grid; grid-template-columns: 1fr 300px; gap: 40px; background: var(--cream); }
+  .detail-body-main {}
+  .detail-section-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--ink); margin-bottom: 16px; }
+  .learn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 28px; }
+  .learn-item { display: flex; gap: 8px; font-size: 13px; color: var(--ink); align-items: flex-start; }
+  .learn-check { color: var(--sage); font-weight: 700; flex-shrink: 0; }
+
+  .curriculum { }
+  .module {
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    margin-bottom: 8px; overflow: hidden;
+  }
+  .module-header {
+    padding: 12px 16px; background: var(--warm);
+    display: flex; justify-content: space-between; align-items: center;
+    cursor: pointer; font-size: 14px; font-weight: 600; color: var(--ink);
+  }
+  .module-meta { font-size: 12px; color: var(--muted); font-weight: 400; }
+  .module-lessons { padding: 8px 16px; background: var(--card); }
+  .lesson { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--muted); }
+  .lesson:last-child { border-bottom: none; }
+  .lesson-icon { font-size: 14px; }
+  .lesson-dur { margin-left: auto; font-size: 12px; }
+
+  .instructor-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px;
+  }
+  .inst-top { display: flex; gap: 12px; align-items: center; margin-bottom: 12px; }
+  .inst-avatar {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold-light), var(--sage-light));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--gold-dark);
+    flex-shrink: 0;
+  }
+  .inst-name { font-size: 15px; font-weight: 600; color: var(--ink); }
+  .inst-title { font-size: 12px; color: var(--muted); }
+  .inst-bio { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  /* ═══════════════════════════
+     SCREEN 4 — DASHBOARD
+  ═══════════════════════════ */
+  .dash-layout { display: grid; grid-template-columns: 220px 1fr; min-height: calc(100% - 64px); }
+  .dash-sidebar {
+    background: var(--ink);
+    padding: 28px 0;
+  }
+  .dash-logo { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--cream); padding: 0 20px 24px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; }
+  .dash-logo em { font-style: normal; color: var(--gold); }
+  .dash-nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 20px; font-size: 13px; font-weight: 500;
+    color: rgba(255,255,255,0.5); cursor: pointer; transition: all 0.15s;
+  }
+  .dash-nav-item:hover { color: var(--cream); background: rgba(255,255,255,0.05); }
+  .dash-nav-item.active { color: var(--cream); background: rgba(201,168,76,0.15); border-right: 3px solid var(--gold); }
+  .dash-nav-icon { font-size: 16px; }
+
+  .dash-main { background: var(--cream); padding: 32px 36px; overflow-y: auto; }
+  .dash-greeting { margin-bottom: 28px; }
+  .dash-greeting h2 { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: var(--ink); }
+  .dash-greeting p { font-size: 14px; color: var(--muted); margin-top: 4px; }
+
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 28px; }
+  .stat-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 18px;
+  }
+  .stat-card-num { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: var(--ink); }
+  .stat-card-label { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .stat-card-icon { font-size: 22px; margin-bottom: 8px; }
+
+  .dash-grid { display: grid; grid-template-columns: 1fr 280px; gap: 20px; }
+  .enrolled-section-title { font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 14px; }
+
+  .enrolled-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 16px 18px;
+    display: flex; gap: 14px; align-items: center;
+    margin-bottom: 12px; cursor: pointer; transition: box-shadow 0.2s;
+  }
+  .enrolled-card:hover { box-shadow: var(--shadow); }
+  .enrolled-thumb {
+    width: 56px; height: 56px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; flex-shrink: 0;
+  }
+  .enrolled-info { flex: 1; }
+  .enrolled-title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+  .enrolled-inst { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+  .enrolled-progress { height: 4px; background: var(--border); border-radius: 4px; }
+  .enrolled-pfill { height: 100%; border-radius: 4px; background: var(--gold); }
+  .enrolled-pct { font-size: 11px; color: var(--muted); margin-top: 3px; }
+  .continue-btn {
+    background: var(--ink); color: var(--cream);
+    border: none; border-radius: 8px;
+    padding: 8px 14px; font-size: 12px; font-weight: 600;
+    cursor: pointer; white-space: nowrap;
+    font-family: 'DM Sans', sans-serif;
+    transition: background 0.15s;
+  }
+  .continue-btn:hover { background: var(--gold-dark); }
+
+  .activity-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 18px;
+    height: fit-content;
+  }
+  .activity-item { display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .activity-item:last-child { border-bottom: none; }
+  .act-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); flex-shrink: 0; margin-top: 4px; }
+  .act-text { color: var(--ink); line-height: 1.4; }
+  .act-time { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  /* ═════════════════════════
+     SCREEN 5 — LESSON PLAYER
+  ═════════════════════════ */
+  .player-layout { display: grid; grid-template-columns: 1fr 320px; min-height: calc(100% - 64px); }
+  .player-main { background: #0d0d0d; display: flex; flex-direction: column; }
+  .video-area {
+    background: #111; flex: 1; display: flex; align-items: center; justify-content: center;
+    position: relative; min-height: 340px;
+  }
+  .play-btn {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: rgba(201,168,76,0.9); display: flex; align-items: center;
+    justify-content: center; cursor: pointer; transition: all 0.15s;
+  }
+  .play-btn:hover { background: var(--gold); transform: scale(1.06); }
+  .play-icon { font-size: 22px; color: var(--ink); margin-left: 4px; }
+  .video-label {
+    position: absolute; top: 16px; left: 16px;
+    background: rgba(0,0,0,0.6); color: rgba(255,255,255,0.8);
+    font-size: 12px; padding: 4px 10px; border-radius: 6px;
+  }
+  .video-controls {
+    background: #1a1a1a; padding: 12px 20px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .vc-btn { background: none; border: none; color: rgba(255,255,255,0.7); font-size: 18px; cursor: pointer; padding: 4px; }
+  .vc-btn:hover { color: white; }
+  .seek-bar { flex: 1; height: 4px; background: #444; border-radius: 4px; position: relative; cursor: pointer; }
+  .seek-fill { height: 100%; width: 42%; background: var(--gold); border-radius: 4px; }
+  .seek-thumb { position: absolute; right: 58%; top: 50%; transform: translate(50%, -50%); width: 12px; height: 12px; border-radius: 50%; background: var(--gold); }
+  .vc-time { font-size: 12px; color: rgba(255,255,255,0.5); white-space: nowrap; }
+
+  .player-notes { background: #141414; padding: 16px 20px; }
+  .notes-title { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.8); margin-bottom: 8px; }
+  .notes-input {
+    width: 100%; background: #1e1e1e; border: 1px solid #333;
+    border-radius: 8px; padding: 10px 12px; color: rgba(255,255,255,0.7);
+    font-family: 'DM Sans', sans-serif; font-size: 13px; resize: none; height: 60px;
+  }
+
+  .player-sidebar { background: var(--cream); border-left: 1px solid var(--border); overflow-y: auto; }
+  .ps-header { padding: 16px 18px; border-bottom: 1px solid var(--border); background: var(--warm); }
+  .ps-title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 2px; }
+  .ps-progress { font-size: 12px; color: var(--muted); }
+  .ps-module-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); padding: 12px 18px 6px; }
+  .ps-lesson {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 18px; font-size: 13px; color: var(--muted);
+    cursor: pointer; transition: background 0.1s;
+    border-bottom: 1px solid var(--border);
+  }
+  .ps-lesson:hover { background: var(--warm); }
+  .ps-lesson.current { background: var(--gold-light); color: var(--gold-dark); font-weight: 600; border-left: 3px solid var(--gold); }
+  .ps-lesson.done { color: var(--sage); }
+  .ps-check { font-size: 14px; flex-shrink: 0; }
+  .ps-dur { margin-left: auto; font-size: 11px; }
+
+  /* ═════════════════
+     SHARED COMPONENTS
+  ═════════════════ */
+  .tag-pill {
+    display: inline-block; font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    padding: 3px 9px; border-radius: 20px;
+  }
+  .tag-design { background: #fbe8d4; color: #a0521e; }
+  .tag-dev { background: var(--sage-light); color: var(--sage); }
+  .tag-business { background: var(--gold-light); color: var(--gold-dark); }
+  .tag-data { background: #e3e8fb; color: #2e4fa0; }
+
+  .rating { display: flex; align-items: center; gap: 4px; font-size: 12px; }
+  .rating .gold { color: var(--gold); }
+  .rating .muted { color: var(--muted); }
+
+</style>
+</head>
+<body>
+
+<div class="proto-header">
+  <div class="proto-title"><span>Lumina</span> — Clickable Prototype</div>
+  <div class="proto-nav">
+    <button class="proto-btn active" onclick="go('home')">① Home</button>
+    <button class="proto-btn" onclick="go('catalog')">② Catalog</button>
+    <button class="proto-btn" onclick="go('detail')">③ Course Detail</button>
+    <button class="proto-btn" onclick="go('dashboard')">④ Dashboard</button>
+    <button class="proto-btn" onclick="go('player')">⑤ Lesson Player</button>
+  </div>
+</div>
+
+<div class="device-frame">
+  <div class="browser-bar">
+    <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+    <div class="url-bar" id="urlBar">lumina.learn/</div>
+  </div>
+
+  <!-- ═══ SCREEN 1: HOME ═══ -->
+  <div class="screen active" id="screen-home">
+    <nav class="home-nav">
+      <div class="logo">Lu<em>mi</em>na</div>
+      <div class="nav-links">
+        <a onclick="go('catalog')">Explore</a>
+        <a>Paths</a>
+        <a>For Teams</a>
+        <a onclick="go('dashboard')">My Learning</a>
+        <button class="nav-cta" onclick="go('catalog')">Browse Courses →</button>
+      </div>
+    </nav>
+
+    <div class="hero">
+      <div class="hero-content">
+        <div class="hero-tag">✦ 2,400+ Expert-led Courses</div>
+        <h1>Learn skills that <em>actually</em> matter.</h1>
+        <p class="hero-sub">Curated, project-based courses from world-class instructors. Learn at your pace, build a real portfolio.</p>
+        <div class="hero-actions">
+          <button class="btn-primary" onclick="go('catalog')">Start Learning Free</button>
+          <button class="btn-ghost" onclick="go('detail')">View Sample Course</button>
+        </div>
+        <div class="hero-stats">
+          <div class="stat">
+            <div class="stat-num">128k</div>
+            <div class="stat-label">Active Learners</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">2.4k</div>
+            <div class="stat-label">Courses</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">4.9★</div>
+            <div class="stat-label">Avg Rating</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-card hc1">
+          <div class="hc-label">Currently Learning</div>
+          <div class="hc-title">UI/UX Design Masterclass</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:68%"></div></div>
+          <div style="display:flex;justify-content:space-between;margin-top:5px;">
+            <span style="font-size:11px;color:#6b6560;">Module 5 of 8</span>
+            <span style="font-size:11px;font-weight:600;color:#8a6820;">68%</span>
+          </div>
+        </div>
+        <div class="hero-card hc2">
+          <div class="hc-label"><span class="badge-dot"></span>Live Session</div>
+          <div class="hc-title" style="font-size:12px;">Design Reviews</div>
+          <div class="hc-sub" style="font-size:11px;">Starting in 15 min</div>
+        </div>
+        <div class="hero-card hc3">
+          <div class="hc-label">Peers Online</div>
+          <div class="avatar-row">
+            <div class="av">S</div><div class="av">M</div><div class="av">R</div><div class="av">+24</div>
+          </div>
+          <div class="hc-sub" style="font-size:11px;margin-top:5px;">Join community →</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-tag">Popular Right Now</div>
+      <h2>Courses built for outcomes</h2>
+      <p class="section-sub">Handpicked by our curriculum team. Updated quarterly.</p>
+      <div class="course-grid">
+        <div class="course-card" onclick="go('detail')">
+          <div class="course-thumb" style="background:#fef3e2;">🎨</div>
+          <div class="course-body">
+            <div class="course-cat tag-pill tag-design">Design</div>
+            <div class="stars">★★★★★</div>
+            <div class="course-title">UI/UX Design Masterclass: Zero to Professional</div>
+            <div class="course-meta">
+              <div class="course-inst">Dr. Aisha Patel</div>
+              <div class="course-price">₹2,499</div>
+            </div>
+          </div>
+        </div>
+        <div class="course-card" onclick="go('detail')">
+          <div class="course-thumb" style="background:#e7f5e8;">💻</div>
+          <div class="course-body">
+            <div class="course-cat tag-pill tag-dev">Development</div>
+            <div class="stars">★★★★★</div>
+            <div class="course-title">Full-Stack Web Dev with React & Node</div>
+            <div class="course-meta">
+              <div class="course-inst">Marcus Chen</div>
+              <div class="course-price">₹3,299</div>
+            </div>
+          </div>
+        </div>
+        <div class="course-card" onclick="go('catalog')">
+          <div class="course-thumb" style="background:#fdeee0;">📊</div>
+          <div class="course-body">
+            <div class="course-cat tag-pill tag-data">Data Science</div>
+            <div class="stars">★★★★½</div>
+            <div class="course-title">Data Science & ML with Python</div>
+            <div class="course-meta">
+              <div class="course-inst">Priya Sharma</div>
+              <div class="course-price">₹2,799</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" style="background:var(--warm);">
+      <div class="section-tag">Why Lumina</div>
+      <h2>Learning, redesigned</h2>
+      <p class="section-sub">Not just videos. A complete environment for real skill development.</p>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🎯</div>
+          <div class="feature-title">Project-based</div>
+          <div class="feature-desc">Every course ends with a real portfolio piece you can show employers.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🧑‍🏫</div>
+          <div class="feature-title">Live Mentorship</div>
+          <div class="feature-desc">Weekly office hours with your instructor. Ask anything, get real answers.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🏅</div>
+          <div class="feature-title">Certificates</div>
+          <div class="feature-desc">Earn verified certificates recognised by 500+ hiring partners.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">♾️</div>
+          <div class="feature-title">Lifetime Access</div>
+          <div class="feature-desc">Pay once, revisit any time. Courses update as the industry evolves.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SCREEN 2: CATALOG ═══ -->
+  <div class="screen" id="screen-catalog">
+    <nav class="home-nav">
+      <div class="logo" onclick="go('home')" style="cursor:pointer;">Lu<em>mi</em>na</div>
+      <div class="nav-links">
+        <a onclick="go('home')">Home</a>
+        <a style="color:var(--ink);font-weight:600;">Explore</a>
+        <a onclick="go('dashboard')">My Learning</a>
+        <button class="nav-cta" onclick="go('dashboard')">Dashboard →</button>
+      </div>
+    </nav>
+    <div class="catalog-layout">
+      <div class="sidebar">
+        <div class="filter-group">
+          <div class="sidebar-title">Category</div>
+          <label class="filter-option"><input type="checkbox" checked> Design <span class="filter-count">142</span></label>
+          <label class="filter-option"><input type="checkbox" checked> Development <span class="filter-count">389</span></label>
+          <label class="filter-option"><input type="checkbox"> Data Science <span class="filter-count">211</span></label>
+          <label class="filter-option"><input type="checkbox"> Business <span class="filter-count">98</span></label>
+          <label class="filter-option"><input type="checkbox"> Marketing <span class="filter-count">74</span></label>
+        </div>
+        <div class="filter-group">
+          <div class="sidebar-title">Level</div>
+          <label class="filter-option"><input type="checkbox" checked> Beginner</label>
+          <label class="filter-option"><input type="checkbox" checked> Intermediate</label>
+          <label class="filter-option"><input type="checkbox"> Advanced</label>
+        </div>
+        <div class="filter-group">
+          <div class="sidebar-title">Price Range</div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px;"><span>₹0</span><span>₹5,000</span></div>
+          <div class="price-range"><div class="price-fill"></div></div>
+          <div style="text-align:center;font-size:12px;color:var(--ink);font-weight:600;margin-top:6px;">Up to ₹3,200</div>
+        </div>
+        <div class="filter-group">
+          <div class="sidebar-title">Rating</div>
+          <label class="filter-option"><input type="checkbox" checked> ★ 4.5 & above</label>
+          <label class="filter-option"><input type="checkbox"> ★ 4.0 & above</label>
+        </div>
+      </div>
+      <div class="catalog-main">
+        <div class="search-field">
+          <span style="font-size:16px;color:var(--muted);">🔍</span>
+          <input placeholder="Search courses, instructors, topics…" value="design">
+        </div>
+        <div class="catalog-top">
+          <h2>531 Courses found</h2>
+          <select class="sort-select"><option>Most Popular</option><option>Highest Rated</option><option>Newest</option></select>
+        </div>
+        <div class="catalog-grid">
+          <div class="course-card" onclick="go('detail')">
+            <div class="course-thumb" style="background:#fef3e2;">🎨</div>
+            <div class="course-body">
+              <div class="course-cat tag-pill tag-design">Design</div>
+              <div class="stars">★★★★★</div>
+              <div class="course-title">UI/UX Design Masterclass</div>
+              <div class="course-meta"><div class="course-inst">Dr. Aisha Patel</div><div class="course-price">₹2,499</div></div>
+            </div>
+          </div>
+          <div class="course-card" onclick="go('detail')">
+            <div class="course-thumb" style="background:#e8f0e7;">🌿</div>
+            <div class="course-body">
+              <div class="course-cat tag-pill tag-dev">Development</div>
+              <div class="stars">★★★★½</div>
+              <div class="course-title">React for Designers</div>
+              <div class="course-meta"><div class="course-inst">Leo Navarro</div><div class="course-price">₹1,899</div></div>
+            </div>
+          </div>
+          <div class="course-card" onclick="go('detail')">
+            <div class="course-thumb" style="background:#f0eafc;">✏️</div>
+            <div class="course-body">
+              <div class="course-cat tag-pill tag-design">Design</div>
+              <div class="stars">★★★★★</div>
+              <div class="course-title">Brand Identity Design</div>
+              <div class="course-meta"><div class="course-inst">Yuki Tanaka</div><div class="course-price">₹2,199</div></div>
+            </div>
+          </div>
+          <div class="course-card" onclick="go('detail')">
+            <div class="course-thumb" style="background:#e3e8fb;">📐</div>
+            <div class="course-body">
+              <div class="course-cat tag-pill tag-data">Data</div>
+              <div class="stars">★★★★★</div>
+              <div class="course-title">Figma: Advanced Prototyping</div>
+              <div class="course-meta"><div class="course-inst">Sara Kim</div><div class="course-price">₹1,499</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SCREEN 3: COURSE DETAIL ═══ -->
+  <div class="screen" id="screen-detail">
+    <div class="detail-hero">
+      <div>
+        <div class="detail-breadcrumb"><span onclick="go('home')">Home</span> / <span onclick="go('catalog')">Design</span> / UI/UX Masterclass</div>
+        <div class="detail-tag">Bestseller</div>
+        <h1>UI/UX Design Masterclass: Zero to Professional</h1>
+        <p>Master user research, wireframing, prototyping, and design systems. Build 6 real-world projects for your portfolio.</p>
+        <div class="detail-meta">
+          <span>⭐ <strong>4.9</strong> (3,412 ratings)</span>
+          <span>👥 <strong>18,204</strong> students</span>
+          <span>⏱ <strong>42 hours</strong></span>
+          <span>🏅 Certificate included</span>
+        </div>
+        <div style="margin-top:16px;font-size:13px;color:rgba(255,255,255,0.5);">By <span style="color:var(--gold);cursor:pointer;">Dr. Aisha Patel</span></div>
+      </div>
+      <div class="enroll-card">
+        <div class="enroll-price">₹2,499</div>
+        <div class="enroll-orig">₹8,999</div>
+        <div style="font-size:11px;font-weight:700;color:var(--rust);margin-bottom:16px;background:var(--rust-light);display:inline-block;padding:3px 8px;border-radius:4px;">72% OFF — 2 days left</div>
+        <button class="btn-primary" style="width:100%;margin-bottom:8px;" onclick="go('dashboard')">Enroll Now</button>
+        <button class="btn-ghost" style="width:100%;font-size:13px;">Try Free Preview</button>
+        <div class="enroll-includes">
+          <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px;">This course includes:</div>
+          <div class="include-item"><span class="include-icon">✓</span> 42 hours on-demand video</div>
+          <div class="include-item"><span class="include-icon">✓</span> 6 downloadable project files</div>
+          <div class="include-item"><span class="include-icon">✓</span> Weekly live Q&A sessions</div>
+          <div class="include-item"><span class="include-icon">✓</span> Certificate of completion</div>
+          <div class="include-item"><span class="include-icon">✓</span> Lifetime access</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-body">
+      <div class="detail-body-main">
+        <div class="detail-section-title">What you'll learn</div>
+        <div class="learn-grid">
+          <div class="learn-item"><span class="learn-check">✓</span> User research methods & interviews</div>
+          <div class="learn-item"><span class="learn-check">✓</span> Wireframing & low-fidelity design</div>
+          <div class="learn-item"><span class="learn-check">✓</span> Figma prototyping & components</div>
+          <div class="learn-item"><span class="learn-check">✓</span> Design systems & tokens</div>
+          <div class="learn-item"><span class="learn-check">✓</span> Usability testing & iteration</div>
+          <div class="learn-item"><span class="learn-check">✓</span> Portfolio presentation skills</div>
+        </div>
+
+        <div class="detail-section-title">Course Curriculum</div>
+        <div class="curriculum">
+          <div class="module">
+            <div class="module-header">Module 1 — UX Foundations <span class="module-meta">5 lessons · 4h 20m</span></div>
+            <div class="module-lessons">
+              <div class="lesson"><span class="lesson-icon">▶</span> Welcome & course overview <span class="lesson-dur">8 min</span></div>
+              <div class="lesson"><span class="lesson-icon">▶</span> What is UX Design? <span class="lesson-dur">22 min</span></div>
+              <div class="lesson"><span class="lesson-icon">📄</span> UX research methods <span class="lesson-dur">Reading</span></div>
+            </div>
+          </div>
+          <div class="module">
+            <div class="module-header">Module 2 — User Research <span class="module-meta">6 lessons · 5h 10m</span></div>
+          </div>
+          <div class="module">
+            <div class="module-header">Module 3 — Wireframing <span class="module-meta">7 lessons · 6h 00m</span></div>
+          </div>
+          <div class="module">
+            <div class="module-header">Module 4 — Figma Deep Dive <span class="module-meta">8 lessons · 7h 30m</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="instructor-card">
+          <div class="inst-top">
+            <div class="inst-avatar">AP</div>
+            <div>
+              <div class="inst-name">Dr. Aisha Patel</div>
+              <div class="inst-title">Senior Product Designer, ex-Google</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:12px;margin-bottom:10px;font-size:12px;color:var(--muted);">
+            <span>⭐ 4.9 Rating</span>
+            <span>👥 54k Students</span>
+          </div>
+          <div class="inst-bio">Former Google & Meta designer with 12 years of experience. Passionate about making design education accessible and practical.</div>
+        </div>
+        <div style="margin-top:16px;padding:16px;background:var(--gold-light);border-radius:var(--radius);border:1px solid var(--gold);">
+          <div style="font-size:13px;font-weight:600;color:var(--gold-dark);margin-bottom:6px;">30-Day Money Back</div>
+          <div style="font-size:12px;color:var(--gold-dark);">Not satisfied? Full refund within 30 days, no questions asked.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SCREEN 4: DASHBOARD ═══ -->
+  <div class="screen" id="screen-dashboard">
+    <div style="height:64px;background:var(--ink);display:flex;align-items:center;justify-content:space-between;padding:0 32px;">
+      <div class="logo" style="color:var(--cream);cursor:pointer;" onclick="go('home')">Lu<em style="color:var(--gold);">mi</em>na</div>
+      <div style="display:flex;align-items:center;gap:16px;">
+        <span style="font-size:13px;color:rgba(255,255,255,0.6);">👋 Welcome back, Rohan</span>
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:var(--ink);">R</div>
+      </div>
+    </div>
+    <div class="dash-layout">
+      <div class="dash-sidebar">
+        <div class="dash-nav-item active"><span class="dash-nav-icon">🏠</span> Dashboard</div>
+        <div class="dash-nav-item" onclick="go('catalog')"><span class="dash-nav-icon">📚</span> My Courses</div>
+        <div class="dash-nav-item"><span class="dash-nav-icon">📅</span> Schedule</div>
+        <div class="dash-nav-item"><span class="dash-nav-icon">🏅</span> Certificates</div>
+        <div class="dash-nav-item"><span class="dash-nav-icon">💬</span> Community</div>
+        <div class="dash-nav-item" onclick="go('catalog')"><span class="dash-nav-icon">🔍</span> Explore</div>
+        <div style="border-top:1px solid rgba(255,255,255,0.1);margin:20px 0;"></div>
+        <div class="dash-nav-item"><span class="dash-nav-icon">⚙️</span> Settings</div>
+      </div>
+      <div class="dash-main">
+        <div class="dash-greeting">
+          <h2>Good evening, Rohan 👋</h2>
+          <p>You've been on a 12-day learning streak. Keep it up!</p>
+        </div>
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-card-icon">📚</div>
+            <div class="stat-card-num">3</div>
+            <div class="stat-card-label">Courses Enrolled</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon">⏱</div>
+            <div class="stat-card-num">42h</div>
+            <div class="stat-card-label">Total Learning</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon">🔥</div>
+            <div class="stat-card-num">12</div>
+            <div class="stat-card-label">Day Streak</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon">🏅</div>
+            <div class="stat-card-num">1</div>
+            <div class="stat-card-label">Certificate</div>
+          </div>
+        </div>
+
+        <div class="dash-grid">
+          <div>
+            <div class="enrolled-section-title">Continue Learning</div>
+            <div class="enrolled-card" onclick="go('player')">
+              <div class="enrolled-thumb" style="background:#fef3e2;">🎨</div>
+              <div class="enrolled-info">
+                <div class="enrolled-title">UI/UX Design Masterclass</div>
+                <div class="enrolled-inst">Dr. Aisha Patel</div>
+                <div class="enrolled-progress"><div class="enrolled-pfill" style="width:68%"></div></div>
+                <div class="enrolled-pct">68% complete — Module 5</div>
+              </div>
+              <button class="continue-btn" onclick="go('player')">Continue</button>
+            </div>
+            <div class="enrolled-card" onclick="go('player')">
+              <div class="enrolled-thumb" style="background:#e7f5e8;">💻</div>
+              <div class="enrolled-info">
+                <div class="enrolled-title">Full-Stack with React & Node</div>
+                <div class="enrolled-inst">Marcus Chen</div>
+                <div class="enrolled-progress"><div class="enrolled-pfill" style="width:24%"></div></div>
+                <div class="enrolled-pct">24% complete — Module 2</div>
+              </div>
+              <button class="continue-btn">Continue</button>
+            </div>
+            <div class="enrolled-card">
+              <div class="enrolled-thumb" style="background:#fdeee0;">📊</div>
+              <div class="enrolled-info">
+                <div class="enrolled-title">Data Science & ML</div>
+                <div class="enrolled-inst">Priya Sharma</div>
+                <div class="enrolled-progress"><div class="enrolled-pfill" style="width:5%"></div></div>
+                <div class="enrolled-pct">5% complete — Module 1</div>
+              </div>
+              <button class="continue-btn">Start</button>
+            </div>
+          </div>
+          <div>
+            <div class="enrolled-section-title">Recent Activity</div>
+            <div class="activity-card">
+              <div class="activity-item">
+                <div class="act-dot"></div>
+                <div>
+                  <div class="act-text">Completed "Design Principles" lesson</div>
+                  <div class="act-time">Today, 2:30 PM</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="act-dot" style="background:var(--sage)"></div>
+                <div>
+                  <div class="act-text">Submitted Module 4 project</div>
+                  <div class="act-time">Yesterday, 6:15 PM</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="act-dot" style="background:var(--muted)"></div>
+                <div>
+                  <div class="act-text">Attended live Q&A with Dr. Patel</div>
+                  <div class="act-time">Mon, 7:00 PM</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="act-dot" style="background:var(--rust)"></div>
+                <div>
+                  <div class="act-text">Enrolled in React & Node course</div>
+                  <div class="act-time">Sat, 11:20 AM</div>
+                </div>
+              </div>
+            </div>
+            <div style="margin-top:14px;padding:14px;background:var(--gold-light);border:1px solid var(--gold);border-radius:var(--radius);">
+              <div style="font-size:13px;font-weight:600;color:var(--gold-dark);margin-bottom:4px;">Next Live Session</div>
+              <div style="font-size:12px;color:var(--gold-dark);">UI/UX Office Hours with Dr. Patel</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:4px;">Tomorrow · 7:00 PM IST</div>
+              <button style="margin-top:10px;background:var(--gold-dark);color:white;border:none;border-radius:6px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">Add to Calendar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SCREEN 5: LESSON PLAYER ═══ -->
+  <div class="screen" id="screen-player">
+    <div style="height:52px;background:var(--ink);display:flex;align-items:center;justify-content:space-between;padding:0 24px;border-bottom:1px solid rgba(255,255,255,0.1);">
+      <div style="display:flex;align-items:center;gap:16px;">
+        <span onclick="go('dashboard')" style="color:rgba(255,255,255,0.5);cursor:pointer;font-size:20px;">←</span>
+        <div class="logo" style="color:var(--cream);font-size:18px;">Lu<em style="color:var(--gold);">mi</em>na</div>
+        <span style="color:rgba(255,255,255,0.3);">|</span>
+        <span style="font-size:13px;color:rgba(255,255,255,0.6);">UI/UX Design Masterclass</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span style="font-size:12px;color:rgba(255,255,255,0.5);">Module 5 · Lesson 2</span>
+        <div style="width:32px;height:32px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:var(--ink);">R</div>
+      </div>
+    </div>
+    <div class="player-layout">
+      <div class="player-main">
+        <div class="video-area">
+          <div class="video-label">▶ Lesson 2 — Figma Auto Layout Deep Dive</div>
+          <div class="play-btn">
+            <span class="play-icon">▶</span>
+          </div>
+          <div style="position:absolute;bottom:16px;right:16px;display:flex;gap:8px;">
+            <div style="background:rgba(0,0,0,0.6);color:rgba(255,255,255,0.7);font-size:11px;padding:3px 8px;border-radius:5px;">HD</div>
+            <div style="background:rgba(0,0,0,0.6);color:rgba(255,255,255,0.7);font-size:11px;padding:3px 8px;border-radius:5px;">CC</div>
+          </div>
+        </div>
+        <div class="video-controls">
+          <button class="vc-btn">⏮</button>
+          <button class="vc-btn">⏸</button>
+          <button class="vc-btn">⏭</button>
+          <div class="seek-bar">
+            <div class="seek-fill"></div>
+            <div class="seek-thumb"></div>
+          </div>
+          <span class="vc-time">18:32 / 44:10</span>
+          <button class="vc-btn">🔊</button>
+          <button class="vc-btn" style="font-size:14px;">1×</button>
+          <button class="vc-btn">⛶</button>
+        </div>
+        <div class="player-notes">
+          <div class="notes-title">📝 My Notes</div>
+          <textarea class="notes-input" placeholder="Take notes as you watch… (timestamps auto-saved)">Auto Layout: use 'hug' for content-sized containers, 'fill' for responsive. Padding ≠ gap.</textarea>
+        </div>
+      </div>
+
+      <div class="player-sidebar">
+        <div class="ps-header">
+          <div class="ps-title">Course Content</div>
+          <div class="ps-progress">Progress: 68% (34/50 lessons)</div>
+          <div style="height:3px;background:var(--border);border-radius:3px;margin-top:8px;"><div style="width:68%;height:100%;background:var(--gold);border-radius:3px;"></div></div>
+        </div>
+
+        <div class="ps-module-title">Module 4 — Design Systems</div>
+        <div class="ps-lesson done"><span class="ps-check">✓</span> Intro to design systems <span class="ps-dur">32 min</span></div>
+        <div class="ps-lesson done"><span class="ps-check">✓</span> Color tokens & variables <span class="ps-dur">28 min</span></div>
+        <div class="ps-lesson done"><span class="ps-check">✓</span> Typography scale <span class="ps-dur">22 min</span></div>
+
+        <div class="ps-module-title">Module 5 — Figma Advanced</div>
+        <div class="ps-lesson done"><span class="ps-check">✓</span> Components & variants <span class="ps-dur">41 min</span></div>
+        <div class="ps-lesson current"><span class="ps-check">▶</span> Auto Layout deep dive <span class="ps-dur">44 min</span></div>
+        <div class="ps-lesson"><span class="ps-check">○</span> Interactive prototypes <span class="ps-dur">38 min</span></div>
+        <div class="ps-lesson"><span class="ps-check">○</span> Advanced animations <span class="ps-dur">35 min</span></div>
+        <div class="ps-lesson"><span class="ps-check">○</span> Module 5 project <span class="ps-dur">Project</span></div>
+
+        <div class="ps-module-title">Module 6 — User Testing</div>
+        <div class="ps-lesson"><span class="ps-check">🔒</span> Research methods <span class="ps-dur">29 min</span></div>
+        <div class="ps-lesson"><span class="ps-check">🔒</span> Usability testing <span class="ps-dur">33 min</span></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /device-frame -->
+
+<script>
+const urls = {
+  home: 'lumina.learn/',
+  catalog: 'lumina.learn/courses',
+  detail: 'lumina.learn/courses/ux-design-masterclass',
+  dashboard: 'lumina.learn/dashboard',
+  player: 'lumina.learn/learn/ux-design/auto-layout'
+};
+
+function go(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+  document.querySelectorAll('.proto-btn').forEach((b, i) => {
+    const ids = ['home','catalog','detail','dashboard','player'];
+    b.classList.toggle('active', ids[i] === id);
+  });
+  document.getElementById('urlBar').textContent = urls[id] || 'lumina.learn/';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
